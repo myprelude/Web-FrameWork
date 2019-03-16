@@ -8,18 +8,40 @@
 
 **用法：**`git rebase 分支名称`
 
-![git图片](https://img-my.csdn.net/uploads/201206/14/1339682677_4329.jpg)
+```
+            master
+              |
+        C1---C2
+              |
+            mywork
+```
 
 如上图：我们以origin分支为基准新建一个mywork分支，我们在mywork分支提交了2个commit；现在需要将mywork分子合并到origin分支；事情往往就是没有那么一帆风顺的，此时的origin分支已经抢先被其他同事提交了commit；如下图：
 
-![图片](https://img-my.csdn.net/uploads/201206/14/1339682809_4752.jpg)
+```
+                  master
+                    |
+    C1---C2---C3---C4
+          \
+          C5---C6
+                |
+              mywork
+```
 
 一般我们都是：
 ```
 git checkout origin
 git merge mywork
 ```
-![git merge](https://img-my.csdn.net/uploads/201206/14/1339682845_9921.jpg)
+```
+                  master
+                    |
+    C1---C2---C3---C4
+          \          \
+          C5---C6----C7
+                      |
+                    mywork
+```
 
 不错问题是解决了；但是产生了一个新的commit 如上图C7;强迫症受不了了；能不能直接将我们要提交的C5 C6直接添加到C4后面而不是生成一个新的提交C7,给人感觉就像是用胶水将他们贴在一起打上了补丁。
 
@@ -27,8 +49,15 @@ rebase 来解决：
 ```
 git rebase origin   // 效果图如下
 ```
-
-![git rebase](https://img-my.csdn.net/uploads/201206/14/1339682976_4523.jpg)
+```
+                  master
+                    |
+    C1---C2---C3---C4
+          \         \
+          C5---C6    C5'---C6'
+                            |
+                         mywork
+```
 
 仔细查看图片，我们是C5 C6的提交变成了C5‘ C6’，然后添加到C4的后面；之前的C5 C6被删除了。形成了一条笔直的线了。那么为啥rebase可以做到呢。
 
